@@ -50,9 +50,11 @@ my_local_download_dir_article = './cc_download_articles/'
 # hosts (if None or empty list, any host is OK)
 my_filter_valid_hosts = []  # example: ['elrancaguino.cl']
 # start date (if None, any date is OK as start date), as datetime
-my_filter_start_date = None  # datetime.datetime(2016, 1, 1)
+my_filter_start_date = datetime.datetime(2019, 3, 1) # for RoBERTa, None otherwise
 # end date (if None, any date is OK as end date), as datetime
-my_filter_end_date = None  # datetime.datetime(2016, 12, 31)
+my_filter_end_date = None  # for RoBERTa, None otherwise
+# choose language, None will take all
+my_language = 'en'
 # Only .warc files published within [my_warc_files_start_date, my_warc_files_end_date) will be downloaded.
 # Note that the date a warc file has been published does not imply it contains only news
 # articles from that date. Instead, you must assume that the warc file can contain articles
@@ -72,9 +74,9 @@ my_show_download_progress = False
 # log_level
 my_log_level = logging.INFO
 # json export style
-my_json_export_style = 1  # 0 (minimize), 1 (pretty)
+my_json_export_style = 0  # 0 (minimize), 1 (pretty)
 # number of extraction processes
-my_number_of_extraction_processes = 1
+my_number_of_extraction_processes = 96
 # if True, the WARC file will be deleted after all articles have been extracted from it
 my_delete_warc_after_extraction = True
 # if True, will continue extraction from the latest fully downloaded but not fully extracted WARC files and then
@@ -143,7 +145,6 @@ def callback_on_warc_completed(warc_path, counter_article_passed, counter_articl
     :param counter_warc_processed:
     :return:
     """
-    pass
 
 
 def main():
@@ -172,6 +173,7 @@ def main():
                                                valid_hosts=my_filter_valid_hosts,
                                                start_date=my_filter_start_date,
                                                end_date=my_filter_end_date,
+                                               language=my_language,
                                                warc_files_start_date=my_warc_files_start_date,
                                                warc_files_end_date=my_warc_files_end_date,
                                                strict_date=my_filter_strict_date,

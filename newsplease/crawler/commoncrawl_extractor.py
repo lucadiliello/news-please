@@ -133,7 +133,32 @@ class CommonCrawlExtractor:
                 if self.__filter_end_date and publishing_date > self.__filter_end_date:
                     return False, article
 
+        # filter on language
+        if self.__filter_on_language is not None:
+            if not article:
+                article = self._from_warc(warc_record)
+
+            original_language = self.__get_publishing_language(warc_record, article)
+            if not original_language:
+                return False, article
+
+            else:  # here we for sure have a language
+                # is article published in another language
+                if self.__filter_on_language and original_language != self.__filter_on_language:
+                    return False, article
+
         return True, article
+
+    def __get_publishing_language(self, warc_record, article):
+        """
+        Extracts the publishing language from the record
+        :param warc_record:
+        :return:
+        """
+        if hasattr(article, 'language'):
+            return str(article.language)
+        else:
+            return None
 
     def __get_publishing_date(self, warc_record, article):
         """
@@ -324,6 +349,7 @@ class CommonCrawlExtractor:
                                  callback_on_warc_completed=None,
                                  valid_hosts=None,
                                  start_date=None, end_date=None,
+                                 language=None,
                                  strict_date=True, reuse_previously_downloaded_files=True, local_download_dir_warc=None,
                                  continue_after_error=True, ignore_unicode_errors=False,
                                  show_download_progress=False, log_level=logging.ERROR, delete_warc_after_extraction=True,
@@ -340,6 +366,7 @@ class CommonCrawlExtractor:
         :param valid_hosts:
         :param start_date:
         :param end_date:
+        :param language:
         :param strict_date:
         :param reuse_previously_downloaded_files:
         :param local_download_dir_warc:
@@ -352,6 +379,7 @@ class CommonCrawlExtractor:
         self.__filter_valid_hosts = valid_hosts
         self.__filter_start_date = start_date
         self.__filter_end_date = end_date
+        self.__filter_on_language = language
         self.__filter_strict_date = strict_date
         if local_download_dir_warc:
             self.__local_download_dir_warc = local_download_dir_warc

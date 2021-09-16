@@ -250,6 +250,7 @@ def __callback_on_warc_completed(warc_path, counter_article_passed, counter_arti
 def __start_commoncrawl_extractor(warc_download_url, callback_on_article_extracted=None,
                                   callback_on_warc_completed=None, valid_hosts=None,
                                   start_date=None, end_date=None,
+                                  language=None,
                                   strict_date=True, reuse_previously_downloaded_files=True,
                                   local_download_dir_warc=None,
                                   continue_after_error=True, show_download_progress=False,
@@ -267,6 +268,7 @@ def __start_commoncrawl_extractor(warc_download_url, callback_on_article_extract
     :param valid_hosts:
     :param start_date:
     :param end_date:
+    :param language:
     :param strict_date:
     :param reuse_previously_downloaded_files:
     :param local_download_dir_warc:
@@ -282,6 +284,7 @@ def __start_commoncrawl_extractor(warc_download_url, callback_on_article_extract
                                                    callback_on_warc_completed=callback_on_warc_completed,
                                                    valid_hosts=valid_hosts,
                                                    start_date=start_date, end_date=end_date,
+                                                   language=language,
                                                    strict_date=strict_date,
                                                    reuse_previously_downloaded_files=reuse_previously_downloaded_files,
                                                    local_download_dir_warc=local_download_dir_warc,
@@ -294,7 +297,7 @@ def __start_commoncrawl_extractor(warc_download_url, callback_on_article_extract
 
 
 def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_completed=None, valid_hosts=None,
-                           start_date=None, end_date=None, warc_files_start_date=None, warc_files_end_date=None, strict_date=True,
+                           start_date=None, end_date=None, language=None, warc_files_start_date=None, warc_files_end_date=None, strict_date=True,
                            reuse_previously_downloaded_files=True, local_download_dir_warc=None,
                            continue_after_error=True, show_download_progress=False,
                            number_of_extraction_processes=4, log_level=logging.ERROR,
@@ -311,6 +314,7 @@ def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_compl
     :param valid_hosts:
     :param start_date:
     :param end_date:
+    :param language:
     :param warc_files_start_date
     :param warc_files_end_date
     :param strict_date:
@@ -361,6 +365,7 @@ def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_compl
                                                 callback_on_warc_completed=__callback_on_warc_completed,
                                                 valid_hosts=valid_hosts,
                                                 start_date=start_date, end_date=end_date,
+                                                language=language,
                                                 strict_date=strict_date,
                                                 reuse_previously_downloaded_files=reuse_previously_downloaded_files,
                                                 local_download_dir_warc=local_download_dir_warc,
@@ -379,6 +384,7 @@ def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_compl
                                           callback_on_warc_completed=__callback_on_warc_completed,
                                           valid_hosts=valid_hosts,
                                           start_date=start_date, end_date=end_date,
+                                          language=language,
                                           strict_date=strict_date,
                                           reuse_previously_downloaded_files=reuse_previously_downloaded_files,
                                           local_download_dir_warc=local_download_dir_warc,
