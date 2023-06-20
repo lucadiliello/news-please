@@ -276,7 +276,8 @@ def __callback_on_warc_completed(warc_path, counter_article_passed, counter_arti
 
     # invoke the external callback
     __extern_callback_on_warc_completed(warc_path, __counter_article_passed, __counter_article_discarded,
-                                        __counter_article_error, __counter_article_total, __counter_warc_processed)
+                                        __counter_article_error, __counter_article_total, __counter_warc_processed,
+                                        __number_of_warc_files_on_cc)
 
 
 def __start_commoncrawl_extractor(warc_path, callback_on_article_extracted=None,
