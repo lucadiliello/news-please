@@ -47,7 +47,7 @@ news-please supports three main use cases, which are explained in more detail in
 * commoncrawl.org provides an extensive, free-to-use archive of news articles from small and major publishers world wide
 * news-please enables users to conveniently download and extract articles from commoncrawl.org
 * you can optionally define filter criteria, such as news publisher(s) or the date period, within which articles need to be published
-* clone the news-please repository, [install the awscli tool](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html), adapt the config section in [newsplease/examples/commoncrawl.py](/newsplease/examples/commoncrawl.py), and execute `python3 -m newsplease.examples.commoncrawl`
+* clone the news-please repository, adapt the config section in [newsplease/examples/commoncrawl.py](/newsplease/examples/commoncrawl.py), and execute `python3 -m newsplease.examples.commoncrawl`
 
 ## Getting started
 It's super easy, we promise!
@@ -59,7 +59,7 @@ $ pip3 install news-please
 ```
 
 ### Use within your own code (as a library)
-You can access the core functionality of news-please, i.e. extraction of semi-structured information from one or more news articles, in your own code by using news-please in library mode. If you want to use news-please's full website extraction (given only the root URL) or continuous crawling mode (using RSS), you'll need to use the CLI mode.
+You can access the core functionality of news-please, i.e. extraction of semi-structured information from one or more news articles, in your own code by using news-please in library mode. If you want to use news-please's full website extraction (given only the root URL) or continuous crawling mode (using RSS), you'll need to use the CLI mode, which is described later.
 ```python
 from newsplease import NewsPlease
 article = NewsPlease.from_url('https://www.nytimes.com/2017/02/23/us/politics/cpac-stephen-bannon-reince-priebus.html?hp')
@@ -84,6 +84,15 @@ or if you have a [WARC file](https://github.com/webrecorder/warcio) (also check 
 NewsPlease.from_warc(warc_record)
 ```
 In library mode, news-please will attempt to download and extract information from each URL. The previously described functions are blocking, i.e., will return once news-please has attempted all URLs. The resulting list contains all successfully extracted articles.
+
+Finally, you can process the extracted information contained in the article object(s). For example, to export into a JSON format, you may use:
+
+```python
+import json
+
+with open("article.json", "w") as file:
+    json.dump(article.get_serializable_dict(), file)
+```
 
 ### Run the crawler (via the CLI)
 
@@ -151,7 +160,7 @@ If you plan to use news-please and its export to PostgreSQL in a production envi
 ### What's next?
 We have collected a bunch of useful information for both [users](https://github.com/fhamborg/news-please/wiki/user-guide)  and [developers](https://github.com/fhamborg/news-please/wiki/developer-guide). As a user, you will most likely only deal with two files: [`sitelist.hjson`](https://github.com/fhamborg/news-please/wiki/user-guide#sitelisthjson) (to define sites to be crawled) and [`config.cfg`](https://github.com/fhamborg/news-please/wiki/configuration) (probably only rarely, in case you want to tweak the configuration).
 
-## Wiki and support (also, how to open an issue)
+## Support (also, how to open an issue)
 You can find more information on usage and development in our [wiki](https://github.com/fhamborg/news-please/wiki)! Before contacting us, please check out the wiki. If you still have questions on how to use news-please, please create a new [issue](https://github.com/fhamborg/news-please/issues) on GitHub. Please understand that we are not able to provide individual support via email. We think that help is more valuable if it is shared publicly so that more people can benefit from it.
 
 ### Issues
@@ -212,4 +221,4 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. The news-please logo is courtesy of [Mario Hamborg](https://mario.hamborg.eu/).
 
-Copyright 2016-2021 The news-please team
+Copyright 2016-2023 The news-please team
