@@ -264,6 +264,8 @@ class CommonCrawlExtractor:
                             filter_pass, article = self.filter_record(record)
                         except (UnicodeDecodeError, EmptyResponseError):
                             filter_pass = False
+                            article = None
+
                         if filter_pass:
                             try:
                                 if not article:
