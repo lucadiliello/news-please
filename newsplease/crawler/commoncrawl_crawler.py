@@ -8,6 +8,7 @@ import logging
 import os
 import time
 from functools import partial
+import multiprocessing
 from multiprocessing import Pool
 import datetime
 import gzip
