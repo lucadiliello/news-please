@@ -292,7 +292,8 @@ def __start_commoncrawl_extractor(warc_path, callback_on_article_extracted=None,
                                   continue_process=True,
                                   log_pathname_fully_extracted_warcs=None,
                                   extractor_cls=CommonCrawlExtractor,
-                                  fetch_images=False):
+                                  fetch_images=False,
+                                  delay=0):
     """
     Starts a single CommonCrawlExtractor
     :param warc_path: path to the WARC file on s3://commoncrawl/ resp. https://data.commoncrawl.org/
@@ -310,8 +311,19 @@ def __start_commoncrawl_extractor(warc_path, callback_on_article_extracted=None,
     :param log_level:
     :param extractor_cls: A subclass of CommonCrawlExtractor, which can be used
         to add custom filtering by overriding .filter_record(...)
+    :param delay:
     :return:
     """
+
+    try:
+        current = multiprocessing.current_process()
+        process_id = current._identity[0]
+        delay = delay * process_id
+    except:
+        pass
+
+    time.sleep(delay)
+                                      
     commoncrawl_extractor = extractor_cls()
     commoncrawl_extractor.extract_from_commoncrawl(warc_path, callback_on_article_extracted,
                                                    callback_on_warc_completed=callback_on_warc_completed,
@@ -336,7 +348,7 @@ def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_compl
                            number_of_extraction_processes=4, log_level=logging.ERROR,
                            delete_warc_after_extraction=True, continue_process=True,
                            extractor_cls=CommonCrawlExtractor, fetch_images=False,
-                           dry_run=False):
+                           dry_run=False, delay=0):
     """
     Crawl and extract articles form the news crawl provided by commoncrawl.org. For each article that was extracted
     successfully the callback function callback_on_article_extracted is invoked where the first parameter is the
@@ -359,6 +371,7 @@ def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_compl
     :param log_level:
     :param extractor_cls:
     :param dry_run: if True just list the WARC files to be processed but do not actually process them
+    :param delay: delay each process start (in seconds)
     :return:
     """
     __setup(local_download_dir_warc, log_level)
@@ -413,7 +426,8 @@ def crawl_from_commoncrawl(callback_on_article_extracted, callback_on_warc_compl
                                                 delete_warc_after_extraction=delete_warc_after_extraction,
                                                 log_pathname_fully_extracted_warcs=__log_pathname_fully_extracted_warcs,
                                                 extractor_cls=extractor_cls,
-                                                fetch_images=fetch_images),
+                                                fetch_images=fetch_images,
+                                                delay=delay),
                                         warc_paths)
     else:
         for warc_path in warc_paths:
