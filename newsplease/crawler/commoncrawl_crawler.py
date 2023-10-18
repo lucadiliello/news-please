@@ -322,6 +322,8 @@ def __start_commoncrawl_extractor(warc_path, callback_on_article_extracted=None,
     except:
         pass
 
+    __logger.info(f'sleeping {delay} seconds')
+
     time.sleep(delay)
                                       
     commoncrawl_extractor = extractor_cls()
