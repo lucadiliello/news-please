@@ -65,6 +65,9 @@ class CommonCrawlExtractor:
     # if the download progress is shown
     __show_download_progress = False
 
+    # use S3
+    __use_botocore_s3 = False
+
     # logging
     logging.basicConfig(level=__log_level)
     __logger = logging.getLogger(__name__)
@@ -335,7 +338,7 @@ class CommonCrawlExtractor:
                                  strict_date=True, reuse_previously_downloaded_files=True, local_download_dir_warc=None,
                                  continue_after_error=True, ignore_unicode_errors=False,
                                  show_download_progress=False, log_level=logging.ERROR, delete_warc_after_extraction=True,
-                                 log_pathname_fully_extracted_warcs=None, fetch_images=False):
+                                 log_pathname_fully_extracted_warcs=None, fetch_images=False, use_s3=False):
         """
         Crawl and extract articles form the news crawl provided by commoncrawl.org. For each article that was extracted
         successfully the callback function callback_on_article_extracted is invoked where the first parameter is the
@@ -375,15 +378,18 @@ class CommonCrawlExtractor:
         self.__log_level = log_level
         self.__delete_warc_after_extraction = delete_warc_after_extraction
         self.__log_pathname_fully_extracted_warcs = log_pathname_fully_extracted_warcs
+        self.__use_botocore_s3 = use_s3
 
         self.__s3_client = None
-        try:
-            s3_client = boto3.client('s3')
-            # Verify access to commoncrawl bucket
-            s3_client.head_bucket(Bucket=self.__cc_bucket)
-            self.__s3_client = s3_client
-        except (botocore.exceptions.ClientError, botocore.exceptions.NoCredentialsError):
-            self.__logger.info('Failed to read %s bucket, using monthly WARC file listings', self.__cc_bucket)
-
+        if self.__use_botocore_s3:
+            try:
+                s3_client = boto3.client('s3')
+                # Verify access to commoncrawl bucket
+                s3_client.head_bucket(Bucket=self.__cc_bucket)
+                self.__s3_client = s3_client
+            except (botocore.exceptions.ClientError, botocore.exceptions.NoCredentialsError):
+                self.__logger.info('Failed to read %s bucket, using HTTPS monthly WARC file listings', self.__cc_bucket)
+        else:
+            self.__logger.info('Using HTTPS monthly WARC file listings')
 
         self.__run()
